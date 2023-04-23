@@ -1,0 +1,109 @@
+service: http-api-proyect
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+
+      Resource:
+        - arn:aws:dynamodb:us-east-1:013802258830:table/test-d-db-e2
+
+
+functions:
+  api:
+    handler: index.handler
+    events:
+      - httpApi:
+          path: /
+          method: get
+  createUser:
+    handler: src/handlers/createUser.handler
+    events:
+      - httpApi:
+          path: /users
+          method: post
+  listUsers: 
+    handler: src/handlers/listUsers.handler
+    events:
+      - httpApi:
+          path: /users
+          method: get
+  getUser: 
+    handler: src/handlers/getUser.handler
+    events:
+      - httpApi:
+          path: /users/{id}
+          method: get
+  updateUser: 
+    handler: src/handlers/updateUser.handler
+    events:
+      - httpApi:
+          path: /users/{id}
+          method: put
+  deleteUSer: 
+    handler: src/handlers/deleteUser.handler
+    events:
+      - httpApi:
+          path: /users/{id}
+          method: delete
+
+
+  createSong:
+    handler: src/handlers/createSong.handler
+    events:
+      - httpApi:
+          path: /songs
+          method: post
+  listSongs: 
+    handler: src/handlers/listSongs.handler
+    events:
+      - httpApi:
+          path: /songs
+          method: get
+  getSong: 
+    handler: src/handlers/getSong.handler
+    events:
+      - httpApi:
+          path: /songs/{id}
+          method: get
+  updateSong: 
+    handler: src/handlers/updateSong.handler
+    events:
+      - httpApi:
+          path: /songs/{id}
+          method: put
+  deleteSong: 
+    handler: src/handlers/deleteSong.handler
+    events:
+      - httpApi:
+          path: /songs/{id}
+          method: delete
+	
+resources: # CloudFormation template syntax
+  Resources:
+    Users:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Users
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+    Songs:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Songs
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
