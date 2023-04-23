@@ -1,0 +1,12 @@
+version: 0.1
+phases:
+  install:
+    commands:
+      - npm install
+      - npm install -g mocha
+      - npm install -g serverless
+      - npm install -g uuid
+      - npm install -g aws-sdk
+  build:
+    commands:
+      - serverless deploy --stage cicd | tee deploy.out
